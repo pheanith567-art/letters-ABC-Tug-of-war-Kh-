@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ល្បែងទាញព្រ័ត្រអក្សរធំ និងអក្សរតូច (Uppercase & Lowercase)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800&family=Kantumruy+Pro:wght@400;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+    body {
+      font-family: 'Kantumruy Pro', sans-serif;
+      background: linear-gradient(to bottom, #dbeafe 0%, #e0f2fe 45%, #e2f4e9 80%, #ccead7 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .font-fredoka { font-family: 'Fredoka', sans-serif; }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 24px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; color: #1e3a8a; }
+    .brand-icon {
+      background: #4f46e5;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-family: 'Fredoka', sans-serif;
+      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.35);
+      font-size: 18px;
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .timer-badge {
+      background: #0f172a;
+      color: #38ef7d;
+      font-family: 'Poppins', sans-serif;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .btn-circle-action {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+      color: #334155;
+    }
+    .btn-circle-action:hover {
+      background: #f8fafc;
+      transform: scale(1.05);
+    }
+    .btn-circle-action:active {
+      transform: scale(0.95);
+    }
+
+    .btn-top-menu {
+      padding: 7px 18px;
+      border-radius: 20px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: inherit;
+      color: #334155;
+      transition: all 0.2s ease;
+    }
+    .btn-top-menu:hover { background: #f8fafc; }
+
+    /* Game Arena */
+    .game-arena {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 24px;
+      max-width: 1420px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .player-panel {
+      width: 350px;
+      background: #fff;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+      z-index: 10;
+      border: 3px solid transparent;
+      transition: transform 0.15s ease;
+    }
+
+    .blue-side { border-color: #3b82f6; }
+    .blue-header { background: #2563eb; color: white; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 17px; }
+    .blue-display { background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: white; text-align: center; padding: 16px 10px; min-height: 120px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+
+    .red-side { border-color: #ef4444; }
+    .red-header { background: #dc2626; color: white; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 17px; }
+    .red-display { background: linear-gradient(135deg, #b91c1c, #ef4444); color: white; text-align: center; padding: 16px 10px; min-height: 120px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+
+    .task-inst-pill {
+      font-size: 13px;
+      font-weight: 700;
+      background: rgba(0,0,0,0.25);
+      padding: 4px 14px;
+      border-radius: 12px;
+      margin-bottom: 6px;
+    }
+    .task-content-main {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .big-letter-txt {
+      font-size: 64px;
+      font-weight: 800;
+      font-family: 'Fredoka', sans-serif;
+      line-height: 1;
+      text-shadow: 0 3px 6px rgba(0,0,0,0.25);
+      color: #ffffff;
+    }
+
+    .qr-trigger-btn {
+      background: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 12px;
+      padding: 4px 10px;
+      font-size: 13px;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: inherit;
+      font-weight: 700;
+    }
+    .qr-trigger-btn:hover { background: rgba(255, 255, 255, 0.4); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; display: inline-block; }
+    .status-dot.connected { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+
+    /* ជម្រើសចម្លើយ អក្សរតូច (MCQ Grid 2x2) */
+    .mcq-options-container {
+      padding: 14px 14px 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .mcq-opt-btn {
+      min-height: 64px;
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      color: #1e3a8a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+    .mcq-opt-btn:hover {
+      background: #eef2ff;
+      border-color: #6366f1;
+    }
+    .mcq-opt-btn:active {
+      transform: scale(0.95);
+      background: #e0e7ff;
+    }
+
+    /* Arena Stage */
+    .rope-stage-container {
+      flex: 1;
+      height: 440px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding-bottom: 25px;
+    }
+
+    .mud-pit {
+      position: absolute;
+      bottom: 84px;
+      width: 250px;
+      height: 60px;
+      background: radial-gradient(ellipse at 50% 40%, #1c0e05 0%, #3e1b08 60%, #683812 100%);
+      border: 4px solid #7c4015;
+      border-radius: 50%;
+      z-index: 1;
+      box-shadow: inset 0 8px 16px rgba(0,0,0,0.8), 0 4px 10px rgba(0,0,0,0.25);
+    }
+
+    .center-pole-assembly {
+      position: absolute;
+      bottom: 95px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 4;
+      pointer-events: none;
+    }
+    .pole-tip {
+      width: 22px;
+      height: 32px;
+      background: linear-gradient(135deg, #fef08a, #d97706, #78350f);
+      clip-path: polygon(50% 0%, 90% 60%, 70% 100%, 30% 100%, 10% 60%);
+    }
+    .pole-stem { width: 14px; height: 140px; background: linear-gradient(to right, #fef08a, #d97706, #78350f); }
+    .pole-base { width: 44px; height: 16px; background: linear-gradient(to bottom, #ca8a04, #542409); border-radius: 50%; }
+
+    .tug-team-assembly {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      bottom: 92px;
+      z-index: 3;
+    }
+    .rope-bar {
+      width: 330px;
+      height: 13px;
+      background: repeating-linear-gradient(45deg, #d97706, #d97706 8px, #854d0e 8px, #854d0e 16px);
+      border-radius: 6px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    }
+    .char-fig { width: 155px; height: 185px; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.22)); }
+    .boy-fig { margin-right: -28px; }
+    .girl-fig { margin-left: -28px; }
+
+    .tug-gauge-wrapper-khmer {
+      width: 380px;
+      background: #ffffff;
+      padding: 8px 18px;
+      border-radius: 24px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      z-index: 10;
+    }
+    .gauge-header-labels { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 700; color: #334155; }
+    .flag-wrap { display: flex; align-items: center; gap: 6px; }
+    .khmer-flag-badge { display: inline-flex; flex-direction: column; width: 25px; height: 16px; border: 1px solid #cbd5e1; border-radius: 3px; overflow: hidden; }
+    .khmer-flag-badge .fb-b { height: 25%; background: #032ea1; }
+    .khmer-flag-badge .fb-r { height: 50%; background: #e00025; position: relative; }
+    .khmer-flag-badge .fb-r::after { content: '🏰'; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0.45); line-height: 0; }
+
+    .gauge-track-khmer { height: 14px; background: #e2e8f0; border-radius: 10px; overflow: hidden; display: flex; position: relative; }
+    .gauge-fill-blue { background: #2563eb; height: 100%; width: 50%; transition: width 0.3s; }
+    .gauge-fill-red { background: #dc2626; height: 100%; width: 50%; transition: width 0.3s; }
+    .gauge-center-pin { position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; background: #fde047; transform: translateX(-50%); z-index: 2; }
+
+    /* Setup Modal */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(7, 13, 23, 0.92);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      overflow-y: auto;
+      padding: 20px 10px;
+    }
+    .setup-card {
+      background: #0b1320;
+      border: 1px solid #1e293b;
+      border-radius: 28px;
+      width: 95%;
+      max-width: 530px;
+      padding: 24px 20px;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .trophy-badge {
+      width: 65px;
+      height: 65px;
+      background: #4f46e5;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 10px;
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+      font-weight: 800;
+      font-family: 'Fredoka', sans-serif;
+    }
+    .setup-title { font-family: 'Fredoka', 'Poppins', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: 1px; margin-bottom: 2px; }
+    .setup-subtitle { font-size: 13px; color: #94a3b8; margin-bottom: 16px; line-height: 1.4; }
+    
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    /* Operations: លំដាប់ A ដល់ Z ឬ ឆ្លាស់ចៃដន្យ */
+    .ordering-mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .btn-pill-ordering {
+      background: #0f172a;
+      border: 2px solid #1e293b;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-pill-ordering.active {
+      border-color: #38bdf8;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+    }
+
+    /* Game Time */
+    .time-five-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .time-pill-btn {
+      background: #0f172a;
+      border: 2px solid #1e293b;
+      color: #94a3b8;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 2px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .time-pill-btn.active {
+      border-color: #10b981;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+    }
+
+    .action-buttons-group { display: flex; flex-direction: column; gap: 10px; }
+    .btn-play-action {
+      width: 100%;
+      background: #10b981;
+      color: #fff;
+      border: none;
+      padding: 13px;
+      border-radius: 16px;
+      font-family: 'Fredoka', 'Kantumruy Pro', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-play-action:hover { background: #059669; transform: translateY(-2px); }
+
+    .qr-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 250; }
+    .qr-modal-box { background: white; padding: 24px; border-radius: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); max-width: 360px; }
+    .btn-close-modal { background: #e2e8f0; border: none; padding: 8px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+    .winner-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 300; }
+    .winner-modal { background: white; padding: 30px 40px; border-radius: 24px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+
+    /* Mobile Screen UI (សម្រាប់ទូរសព្ទបញ្ជា) */
+    #mobileControllerScreen {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 16px;
+      background: #f1f5f9;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .mobile-role-card {
+      text-align: center;
+      padding: 12px;
+      border-radius: 16px;
+      color: white;
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .mobile-question-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+      text-align: center;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Host Screen (កុំព្យូទ័រ / Smart TV) -->
+  <div id="hostScreen" style="display: flex; flex-direction: column; min-height: 100vh;">
+    <header>
+      <div class="brand">
+        <div class="brand-icon">Aa</div>
+        <span>ល្បែងទាញព្រ័ត្រ (អក្សរធំ និងអក្សរតូច A to Z)</span>
+      </div>
+      
+      <div class="header-actions">
+        <div class="timer-badge" id="timerBadge">03:00</div>
+        
+        <!-- ប៊ូតុងបិទ/បើក សំឡេង -->
+        <button class="btn-circle-action" id="btnSoundToggle" onclick="toggleSound()" title="បិទ/បើក សំឡេង">🔊</button>
+        
+        <!-- ប៊ូតុងពង្រីកពេញអេក្រង់ (Fullscreen) -->
+        <button class="btn-circle-action" onclick="toggleFullscreen()" title="ពង្រីកពេញអេក្រង់">
+          <svg id="fullscreenIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7M21 15v6h-6M3 9V3h6M21 21l-7-7M3 3l7 7"/>
+          </svg>
+        </button>
+
+        <!-- ប៊ូតុងកំណត់ហ្គេម -->
+        <button class="btn-top-menu" onclick="openSetupModal()">⚙️ កំណត់ហ្គេម</button>
+      </div>
+    </header>
+
+    <div class="game-arena">
+      <!-- ក្រុមខៀវ -->
+      <div class="player-panel blue-side" id="panel-1">
+        <div class="blue-header">
+          <div>ខៀវ <span id="score-p1">★ 0</span></div>
+          <button class="qr-trigger-btn" onclick="openQRModal(1)">
+            <span class="status-dot" id="dot-p1"></span> 📱 ស្កេន
+          </button>
+        </div>
+        <div class="blue-display" id="question-p1">
+          <div class="task-inst-pill">ជ្រើសរើសអក្សរតូចដែលត្រូវគ្នា៖</div>
+          <div class="task-content-main">
+            <span class="big-letter-txt" id="letter-p1">A</span>
+          </div>
+        </div>
+
+        <!-- ជម្រើស MCQ ៤ អក្សរតូច -->
+        <div class="mcq-options-container" id="mcq-wrap-p1"></div>
+      </div>
+
+      <!-- ទីលានទាញព្រ័ត្រកណ្តាល -->
+      <div class="rope-stage-container">
+        <div class="mud-pit"></div>
+
+        <div class="center-pole-assembly">
+          <div class="pole-tip"></div>
+          <div class="pole-stem"></div>
+          <div class="pole-base"></div>
+        </div>
+
+        <div class="tug-team-assembly" id="ropeAssembly">
+          <svg class="char-fig boy-fig" viewBox="0 0 170 200">
+            <path d="M 72,135 L 45,188" stroke="#fcd34d" stroke-width="15" stroke-linecap="round"></path>
+            <path d="M 94,135 L 122,188" stroke="#fcd34d" stroke-width="15" stroke-linecap="round"></path>
+            <circle cx="42" cy="188" r="8" fill="#fcd34d"></circle>
+            <circle cx="125" cy="188" r="8" fill="#fcd34d"></circle>
+            <path d="M 54,110 C 46,140 60,154 78,148 C 86,142 92,142 98,148 C 114,154 124,140 116,110 Z" fill="#1e3a8a"></path>
+            <rect x="54" y="104" width="62" height="15" rx="4" fill="#f43f5e"></rect>
+            <path d="M 58,104 L 58,119 M 68,104 L 68,119 M 78,104 L 78,119 M 88,104 L 88,119 M 98,104 L 98,119 M 108,104 L 108,119" stroke="#ffffff" stroke-width="2.5"></path>
+            <path d="M 56,68 L 110,68 L 114,108 L 52,108 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"></path>
+            <path d="M 70,82 L 138,96" stroke="#fcd34d" stroke-width="14" stroke-linecap="round"></path>
+            <circle cx="82" cy="40" r="30" fill="#fcd34d"></circle>
+            <path d="M 52,35 C 50,8 88,0 114,16 C 118,26 116,42 102,35 C 92,22 68,22 52,35 Z" fill="#381e0d"></path>
+            <circle cx="95" cy="38" r="4.5" fill="#1e293b"></circle>
+            <path d="M 88,50 Q 98,60 106,48" stroke="#b91c1c" stroke-width="3" fill="white" stroke-linecap="round"></path>
+          </svg>
+
+          <div class="rope-bar"></div>
+
+          <svg class="char-fig girl-fig" viewBox="0 0 170 200" style="transform: scaleX(-1);">
+            <path d="M 72,135 L 45,188" stroke="#fcd34d" stroke-width="15" stroke-linecap="round"></path>
+            <path d="M 94,135 L 122,188" stroke="#fcd34d" stroke-width="15" stroke-linecap="round"></path>
+            <circle cx="42" cy="188" r="8" fill="#fcd34d"></circle>
+            <circle cx="125" cy="188" r="8" fill="#fcd34d"></circle>
+            <path d="M 54,110 C 46,140 60,154 78,148 C 86,142 92,142 98,148 C 114,154 124,140 116,110 Z" fill="#991b1b"></path>
+            <path d="M 56,68 L 110,68 L 114,108 L 52,108 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"></path>
+            <path d="M 58,70 L 106,110 L 96,115 L 50,75 Z" fill="#e11d48"></path>
+            <path d="M 70,82 L 138,96" stroke="#fcd34d" stroke-width="14" stroke-linecap="round"></path>
+            <path d="M 48,32 C 36,60 42,100 52,112 C 60,94 60,50 60,32 Z" fill="#221105"></path>
+            <circle cx="82" cy="40" r="30" fill="#fcd34d"></circle>
+            <path d="M 52,35 C 50,10 88,2 112,18 C 116,28 112,42 102,35 C 92,22 68,22 52,35 Z" fill="#221105"></path>
+            <circle cx="95" cy="38" r="4.5" fill="#1e293b"></circle>
+            <path d="M 88,50 Q 98,60 106,48" stroke="#b91c1c" stroke-width="3" fill="white" stroke-linecap="round"></path>
+          </svg>
+        </div>
+
+        <div class="tug-gauge-wrapper-khmer">
+          <div class="gauge-header-labels">
+            <div class="flag-wrap">
+              <span class="khmer-flag-badge"><span class="fb-b"></span><span class="fb-r"></span><span class="fb-b"></span></span>
+              <span>ខៀវ</span>
+              <b id="lbl-score-left" style="color:#2563eb; margin-left:4px;">0</b>
+            </div>
+            <div class="flag-wrap">
+              <b id="lbl-score-right" style="color:#dc2626; margin-right:4px;">0</b>
+              <span>ក្រហម</span>
+              <span class="khmer-flag-badge"><span class="fb-b"></span><span class="fb-r"></span><span class="fb-b"></span></span>
+            </div>
+          </div>
+          <div class="gauge-track-khmer">
+            <div class="gauge-fill-blue" id="gaugeBlue"></div>
+            <div class="gauge-fill-red" id="gaugeRed"></div>
+            <div class="gauge-center-pin"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ក្រុមក្រហម -->
+      <div class="player-panel red-side" id="panel-2">
+        <div class="red-header">
+          <div>ក្រហម <span id="score-p2">★ 0</span></div>
+          <button class="qr-trigger-btn" onclick="openQRModal(2)">
+            <span class="status-dot" id="dot-p2"></span> 📱 ស្កេន
+          </button>
+        </div>
+        <div class="red-display" id="question-p2">
+          <div class="task-inst-pill">ជ្រើសរើសអក្សរតូចដែលត្រូវគ្នា៖</div>
+          <div class="task-content-main">
+            <span class="big-letter-txt" id="letter-p2">A</span>
+          </div>
+        </div>
+
+        <!-- ជម្រើស MCQ ៤ អក្សរតូច -->
+        <div class="mcq-options-container" id="mcq-wrap-p2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR Modal Popup -->
+  <div class="qr-modal-overlay" id="qrModal">
+    <div class="qr-modal-box">
+      <h3 id="qrModalTitle" style="color:#1e293b;">ស្កេនបញ្ជាទូរសព្ទ</h3>
+      <p style="font-size:13px; color:#64748b;">ប្រើកាមេរ៉ាទូរសព្ទស្កេន QR Code នេះដើម្បីលេង (ដើរទាំង 4G/5G និង Wi-Fi)</p>
+      <div id="qrcodeCanvas"></div>
+      <button class="btn-close-modal" onclick="closeQRModal()">បិទ</button>
+    </div>
+  </div>
+
+  <!-- ================= MODAL SETUP (START SCREEN) ================= -->
+  <div class="modal-backdrop" id="setupModal" style="display: flex;">
+    <div class="setup-card">
+      <div class="trophy-badge">A a</div>
+      <h2 class="setup-title">UPPER & LOWERCASE</h2>
+      <p class="setup-subtitle">ផ្គូផ្គងអក្សរធំជាមួយអក្សរតូចឱ្យបានត្រឹមត្រូវ និងរហ័ស ដើម្បីទាញឈ្នះគូប្រកួត!</p>
+
+      <!-- CHOOSE MODE -->
+      <div class="section-label">⚙️ ទម្រង់នៃសំណួរ (QUIZ MODE)</div>
+      <div class="ordering-mode-grid">
+        <button class="btn-pill-ordering active" onclick="setMode('linear', this)">
+          📋 តាមលំដាប់ A ដល់ Z
+        </button>
+        <button class="btn-pill-ordering" onclick="setMode('random', this)">
+          🔀 សំណួរឆ្លាស់ចៃដន្យ
+        </button>
+      </div>
+
+      <!-- GAME TIME -->
+      <div class="section-label">⏱️ រយៈពេលប្រកួត (GAME TIME)</div>
+      <div class="time-five-grid">
+        <button class="time-pill-btn" onclick="setGameTime(1, this)">1 MIN</button>
+        <button class="time-pill-btn active" onclick="setGameTime(3, this)">3 MIN</button>
+        <button class="time-pill-btn" onclick="setGameTime(5, this)">5 MIN</button>
+        <button class="time-pill-btn" onclick="setGameTime(7, this)">7 MIN</button>
+        <button class="time-pill-btn" onclick="setGameTime(10, this)">10 MIN</button>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-buttons-group">
+        <button class="btn-play-action" onclick="startGameFromModal()">
+          ▶ ចាប់ផ្ដើមលេង (PLAY NOW)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Winner Modal -->
+  <div class="winner-overlay" id="winnerModal" style="display: none;">
+    <div class="winner-modal">
+      <h2 id="winnerText" style="font-size:26px; color:#1e293b; margin-bottom:12px;">🏆 ខៀវឈ្នះ!</h2>
+      <p id="winnerReason" style="color:#64748b; margin-bottom:20px; font-size:15px;">បានពិន្ទុច្រើនជាងគេ</p>
+      <button class="btn-play-action" style="padding:10px 24px; font-size:16px;" onclick="openSetupModal()">ប្រកួតសារថ្មី</button>
+    </div>
+  </div>
+
+  <!-- Mobile Screen UI (សម្រាប់ទូរសព្ទបញ្ជា) -->
+  <div id="mobileControllerScreen">
+    <div class="mobile-role-card" id="mobileRoleHeader">ឧបករណ៍បញ្ជា</div>
+
+    <div class="mobile-question-card">
+      <div class="task-inst-pill" style="background:#f1f5f9; color:#1e293b; margin-bottom:12px;">
+        ជ្រើសរើសអក្សរតូចដែលត្រូវគ្នា៖
+      </div>
+      <div class="task-content-main" style="margin-bottom: 16px;">
+        <span class="big-letter-txt" id="mBigLetter" style="color:#4338ca; font-size: 72px;">A</span>
+      </div>
+      
+      <div class="mcq-options-container" id="mMcqContainer" style="padding:0; gap:10px;"></div>
+    </div>
+  </div>
+
+  <script>
+    // ================= ALPHABET DATA (Uppercase & Lowercase) =================
+    const alphabetData = [
+      { upper: "A", lower: "a" },
+      { upper: "B", lower: "b" },
+      { upper: "C", lower: "c" },
+      { upper: "D", lower: "d" },
+      { upper: "E", lower: "e" },
+      { upper: "F", lower: "f" },
+      { upper: "G", lower: "g" },
+      { upper: "H", lower: "h" },
+      { upper: "I", lower: "i" },
+      { upper: "J", lower: "j" },
+      { upper: "K", lower: "k" },
+      { upper: "L", lower: "l" },
+      { upper: "M", lower: "m" },
+      { upper: "N", lower: "n" },
+      { upper: "O", lower: "o" },
+      { upper: "P", lower: "p" },
+      { upper: "Q", lower: "q" },
+      { upper: "R", lower: "r" },
+      { upper: "S", lower: "s" },
+      { upper: "T", lower: "t" },
+      { upper: "U", lower: "u" },
+      { upper: "V", lower: "v" },
+      { upper: "W", lower: "w" },
+      { upper: "X", lower: "x" },
+      { upper: "Y", lower: "y" },
+      { upper: "Z", lower: "z" }
+    ];
+
+    // ================= FULLSCREEN FEATURE =================
+    function toggleFullscreen() {
+      playTapSound();
+      const docEl = document.documentElement;
+      const icon = document.getElementById('fullscreenIcon');
+
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (docEl.requestFullscreen) {
+          docEl.requestFullscreen().catch(() => {});
+        } else if (docEl.webkitRequestFullscreen) {
+          docEl.webkitRequestFullscreen();
+        }
+        if (icon) {
+          icon.innerHTML = '<path d="M4 14h6m0 0v6m0-6l-7 7M20 10h-6m0 0V4m0 6l7-7M14 20v-6m0 0h6m-6 0l7 7M10 4v6m0 0H4m6 0L3 3"/>';
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+        if (icon) {
+          icon.innerHTML = '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7M21 15v6h-6M3 9V3h6M21 21l-7-7M3 3l7 7"/>';
+        }
+      }
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+      const icon = document.getElementById('fullscreenIcon');
+      if (!icon) return;
+      if (!document.fullscreenElement) {
+        icon.innerHTML = '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7M21 15v6h-6M3 9V3h6M21 21l-7-7M3 3l7 7"/>';
+      } else {
+        icon.innerHTML = '<path d="M4 14h6m0 0v6m0-6l-7 7M20 10h-6m0 0V4m0 6l7-7M14 20v-6m0 0h6m-6 0l7 7M10 4v6m0 0H4m6 0L3 3"/>';
+      }
+    });
+
+    // ================= SOUND & AUDIO SYNTHESIZER =================
+    let audioCtx = null;
+    let isSoundEnabled = true;
+    let bgmInterval = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleSound() {
+      isSoundEnabled = !isSoundEnabled;
+      const btn = document.getElementById('btnSoundToggle');
+      if (btn) btn.innerText = isSoundEnabled ? '🔊' : '🔇';
+      if (!isSoundEnabled) {
+        stopBGM();
+      } else {
+        startBGM();
+      }
+    }
+
+    function playTapSound() {
+      if (!isSoundEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(650, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.05);
+
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+      } catch (e) {}
+    }
+
+    function playCorrectSound() {
+      if (!isSoundEnabled) return;
+      initAudio();
+      try {
+        const now = audioCtx.currentTime;
+        const notes = [523.25, 659.25, 783.99];
+        notes.forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + i * 0.08);
+
+          gain.gain.setValueAtTime(0.25, now + i * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.18);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + i * 0.08);
+          osc.stop(now + i * 0.08 + 0.18);
+        });
+      } catch (e) {}
+    }
+
+    function playWrongSound() {
+      if (!isSoundEnabled) return;
+      initAudio();
+      try {
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(160, now);
+        osc.frequency.linearRampToValueAtTime(100, now + 0.2);
+
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      } catch (e) {}
+    }
+
+    function playVictorySound() {
+      if (!isSoundEnabled) return;
+      initAudio();
+      try {
+        const now = audioCtx.currentTime;
+        const melody = [
+          { f: 523.25, t: 0.12 },
+          { f: 659.25, t: 0.12 },
+          { f: 783.99, t: 0.12 },
+          { f: 1046.50, t: 0.35 }
+        ];
+        let offset = 0;
+        melody.forEach(n => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(n.f, now + offset);
+          gain.gain.setValueAtTime(0.3, now + offset);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + offset + n.t);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + offset);
+          osc.stop(now + offset + n.t);
+          offset += n.t + 0.03;
+        });
+      } catch (e) {}
+    }
+
+    const bgmNotes = [
+      261.63, 329.63, 392.00, 329.63,
+      293.66, 349.23, 440.00, 349.23,
+      329.63, 392.00, 523.25, 392.00,
+      392.00, 349.23, 329.63, 293.66
+    ];
+    let bgmStep = 0;
+
+    function playBgmNote() {
+      if (!isSoundEnabled || !audioCtx) return;
+      try {
+        const freq = bgmNotes[bgmStep % bgmNotes.length];
+        bgmStep++;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.035, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.22);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.22);
+      } catch (e) {}
+    }
+
+    function startBGM() {
+      stopBGM();
+      if (!isSoundEnabled) return;
+      initAudio();
+      bgmInterval = setInterval(playBgmNote, 240);
+    }
+
+    function stopBGM() {
+      if (bgmInterval) {
+        clearInterval(bgmInterval);
+        bgmInterval = null;
+      }
+    }
+
+    // ================= NETWORK (WebRTC + STUN Servers) =================
+    const peerConfig = {
+      config: {
+        iceServers: [
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:stun1.l.google.com:19302' },
+          { urls: 'stun:stun2.l.google.com:19302' }
+        ]
+      }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const peerRole = urlParams.get('role');
+    const targetHostId = urlParams.get('host');
+
+    let peer = null, conn = null;
+
+    if (peerRole && targetHostId) {
+      document.getElementById('hostScreen').style.display = 'none';
+      document.getElementById('setupModal').style.display = 'none';
+      document.getElementById('mobileControllerScreen').style.display = 'flex';
+      
+      const mHeader = document.getElementById('mobileRoleHeader');
+
+      if (peerRole === 'p1') {
+        mHeader.innerText = '💙 ក្រុមខៀវ (ទូរសព្ទ)';
+        mHeader.style.background = '#2563eb';
+      } else {
+        mHeader.innerText = '❤️ ក្រុមក្រហម (ទូរសព្ទ)';
+        mHeader.style.background = '#dc2626';
+      }
+
+      peer = new Peer(peerConfig);
+      peer.on('open', () => {
+        conn = peer.connect(targetHostId, { metadata: { role: peerRole }, reliable: true });
+        setupConnectionEvents();
+      });
+
+      function setupConnectionEvents() {
+        conn.on('data', (d) => {
+          if (d.type === 'sync_letter_task') {
+            document.getElementById('mBigLetter').innerText = d.upper;
+            renderMobileMcq(d.options);
+          }
+        });
+      }
+
+      function renderMobileMcq(options) {
+        const cont = document.getElementById('mMcqContainer');
+        cont.innerHTML = '';
+        options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'mcq-opt-btn';
+          btn.innerText = opt;
+          btn.onclick = () => {
+            playTapSound();
+            conn.send({ action: 'choose_mcq', val: opt });
+          };
+          cont.appendChild(btn);
+        });
+      }
+
+    } else {
+      const hostSessionId = 'alpha-' + Math.random().toString(36).substring(2, 8);
+      peer = new Peer(hostSessionId, peerConfig);
+
+      let connMap = { 1: null, 2: null };
+
+      peer.on('connection', (c) => {
+        const pNum = c.metadata && c.metadata.role === 'p1' ? 1 : 2;
+        connMap[pNum] = c;
+        const dot = document.getElementById(`dot-p${pNum}`);
+        if (dot) dot.classList.add('connected');
+
+        c.on('open', () => {
+          syncTaskToMobile(pNum);
+        });
+
+        c.on('data', (data) => {
+          if (data.action === 'choose_mcq') {
+            submitMcqAnswer(pNum, data.val);
+          }
+        });
+
+        c.on('close', () => {
+          if (dot) dot.classList.remove('connected');
+          connMap[pNum] = null;
+        });
+      });
+
+      function syncTaskToMobile(pNum) {
+        let st = pNum === 1 ? stateP1 : stateP2;
+        if (connMap[pNum] && connMap[pNum].open && st.currentTask) {
+          connMap[pNum].send({
+            type: 'sync_letter_task',
+            upper: st.currentTask.upper,
+            options: st.options
+          });
+        }
+      }
+
+      function openQRModal(playerNum) {
+        playTapSound();
+        const currentURL = window.location.href.split('?')[0];
+        const connectURL = `${currentURL}?host=${hostSessionId}&role=p${playerNum}`;
+
+        document.getElementById('qrModalTitle').innerText = playerNum === 1 ? 'ស្កេនសម្រាប់ ក្រុមខៀវ' : 'ស្កេនសម្រាប់ ក្រុមក្រហម';
+        const qrContainer = document.getElementById('qrcodeCanvas');
+        qrContainer.innerHTML = '';
+        new QRCode(qrContainer, { text: connectURL, width: 180, height: 180 });
+
+        document.getElementById('qrModal').style.display = 'flex';
+      }
+
+      function closeQRModal() {
+        playTapSound();
+        document.getElementById('qrModal').style.display = 'none';
+      }
+
+      // Parameters
+      let selectedQuizMode = 'linear'; // 'linear' or 'random'
+      let gameMinutes = 3;
+      let timerInterval = null;
+      let timeLeft = 180;
+
+      let ropePosition = 0;
+      const WIN_LIMIT = 5;
+
+      let stateP1 = { currentIdx: 0, currentTask: null, answer: '', options: [], score: 0 };
+      let stateP2 = { currentIdx: 0, currentTask: null, answer: '', options: [], score: 0 };
+
+      function openSetupModal() {
+        playTapSound();
+        stopBGM();
+        clearInterval(timerInterval);
+        document.getElementById('winnerModal').style.display = 'none';
+        document.getElementById('setupModal').style.display = 'flex';
+      }
+
+      function setMode(m, btn) {
+        playTapSound();
+        selectedQuizMode = m;
+        document.querySelectorAll('.btn-pill-ordering').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+
+      function setGameTime(mins, btn) {
+        playTapSound();
+        gameMinutes = mins;
+        btn.parentElement.querySelectorAll('.time-pill-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+
+      function startGameFromModal() {
+        playTapSound();
+        document.getElementById('setupModal').style.display = 'none';
+        resetFullGame();
+        startTimer();
+        startBGM();
+      }
+
+      function startTimer() {
+        clearInterval(timerInterval);
+        timeLeft = gameMinutes * 60;
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          updateTimerDisplay();
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            handleTimeUp();
+          }
+        }, 1000);
+      }
+
+      function updateTimerDisplay() {
+        let m = Math.floor(timeLeft / 60);
+        let s = timeLeft % 60;
+        document.getElementById('timerBadge').innerText = 
+          `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+      }
+
+      function handleTimeUp() {
+        stopBGM();
+        playVictorySound();
+        if (ropePosition < 0 || stateP1.score > stateP2.score) {
+          showWinnerDialog('🏆 ក្រុមខៀវ ជាអ្នកឈ្នះ!', 'អស់ពេល! ក្រុមខៀវរកពិន្ទុបានច្រើនជាង');
+        } else if (ropePosition > 0 || stateP2.score > stateP1.score) {
+          showWinnerDialog('🏆 ក្រុមក្រហម ជាអ្នកឈ្នះ!', 'អស់ពេល! ក្រុមក្រហមរកពិន្ទុបានច្រើនជាង');
+        } else {
+          showWinnerDialog('🤝 លទ្ធផលស្មើគ្នា!', 'ពិន្ទុស្មើគ្នានៅពេលចប់ម៉ោង');
+        }
+      }
+
+      function generateLetterTask(pNum) {
+        let state = pNum === 1 ? stateP1 : stateP2;
+        let item;
+
+        if (selectedQuizMode === 'linear') {
+          item = alphabetData[state.currentIdx % alphabetData.length];
+          state.currentIdx++;
+        } else {
+          item = alphabetData[Math.floor(Math.random() * alphabetData.length)];
+        }
+
+        const correctLower = item.lower;
+        const otherLowers = alphabetData
+          .filter(d => d.lower !== correctLower)
+          .map(d => d.lower);
+
+        const uniqueDistractors = [...new Set(otherLowers)]
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 3);
+
+        const options = [correctLower, ...uniqueDistractors].sort(() => 0.5 - Math.random());
+
+        return {
+          item: item,
+          answer: correctLower,
+          options: options
+        };
+      }
+
+      function updateQuestion(pNum) {
+        let task = generateLetterTask(pNum);
+        let state = pNum === 1 ? stateP1 : stateP2;
+        state.currentTask = task.item;
+        state.answer = task.answer;
+        state.options = task.options;
+
+        document.getElementById(`letter-p${pNum}`).innerText = task.item.upper;
+
+        renderMcq(pNum, task.options);
+        syncTaskToMobile(pNum);
+      }
+
+      function renderMcq(pNum, options) {
+        const cont = document.getElementById(`mcq-wrap-p${pNum}`);
+        cont.innerHTML = '';
+        options.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'mcq-opt-btn';
+          btn.innerText = opt;
+          btn.onclick = () => {
+            submitMcqAnswer(pNum, opt);
+          };
+          cont.appendChild(btn);
+        });
+      }
+
+      function submitMcqAnswer(pNum, chosen) {
+        playTapSound();
+        let state = pNum === 1 ? stateP1 : stateP2;
+        if (chosen === state.answer) {
+          handleCorrect(pNum);
+        } else {
+          handleWrong(pNum);
+        }
+      }
+
+      function handleCorrect(pNum) {
+        playCorrectSound();
+        if (pNum === 1) {
+          ropePosition -= 1;
+          stateP1.score++;
+          document.getElementById('score-p1').innerText = '★ ' + stateP1.score;
+          document.getElementById('lbl-score-left').innerText = stateP1.score;
+        } else {
+          ropePosition += 1;
+          stateP2.score++;
+          document.getElementById('score-p2').innerText = '★ ' + stateP2.score;
+          document.getElementById('lbl-score-right').innerText = stateP2.score;
+        }
+
+        updateRopeUI();
+
+        if (Math.abs(ropePosition) >= WIN_LIMIT) {
+          stopBGM();
+          playVictorySound();
+          clearInterval(timerInterval);
+          showWinnerDialog(
+            ropePosition < 0 ? '🏆 ក្រុមខៀវ ជាអ្នកឈ្នះ!' : '🏆 ក្រុមក្រហម ជាអ្នកឈ្នះ!',
+            'បានទាញព្រ័ត្រដល់គោលដៅជោគជ័យ!'
+          );
+        } else {
+          updateQuestion(pNum);
+        }
+      }
+
+      function handleWrong(pNum) {
+        playWrongSound();
+        let panel = document.getElementById(`panel-${pNum}`);
+        panel.style.transform = 'translateX(-8px)';
+        setTimeout(() => panel.style.transform = 'translateX(8px)', 70);
+        setTimeout(() => panel.style.transform = 'translateX(-5px)', 140);
+        setTimeout(() => panel.style.transform = 'translateX(0)', 210);
+      }
+
+      function updateRopeUI() {
+        document.getElementById('ropeAssembly').style.transform = `translateX(${ropePosition * 34}px)`;
+        let blueW = ((WIN_LIMIT - ropePosition) / (WIN_LIMIT * 2)) * 100;
+        document.getElementById('gaugeBlue').style.width = `${blueW}%`;
+        document.getElementById('gaugeRed').style.width = `${100 - blueW}%`;
+      }
+
+      function showWinnerDialog(title, reason) {
+        document.getElementById('winnerText').innerText = title;
+        document.getElementById('winnerReason').innerText = reason;
+        document.getElementById('winnerModal').style.display = 'flex';
+      }
+
+      function resetFullGame() {
+        ropePosition = 0;
+        stateP1.score = 0; stateP1.currentIdx = 0;
+        stateP2.score = 0; stateP2.currentIdx = 0;
+        document.getElementById('score-p1').innerText = '★ 0';
+        document.getElementById('score-p2').innerText = '★ 0';
+        document.getElementById('lbl-score-left').innerText = '0';
+        document.getElementById('lbl-score-right').innerText = '0';
+        document.getElementById('winnerModal').style.display = 'none';
+
+        updateRopeUI();
+        updateQuestion(1);
+        updateQuestion(2);
+      }
+
+      openSetupModal();
+    }
+  </script>
+
+</body>
+</html>
